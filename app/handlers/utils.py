@@ -5,14 +5,14 @@ from typing import Annotated
 from aiogram import F
 from aiogram import Router, Bot
 from aiogram import exceptions
-from aiogram.methods import EditMessageText, EditMessageMedia
-from aiogram.methods import SendMessage, SendDocument, SendMediaGroup
+from aiogram.methods import EditMessageText, EditMessageMedia, EditMessageReplyMarkup
+from aiogram.methods import SendMessage, SendPhoto
 from aiogram.types import CallbackQuery, Message
 from aiogram3_di import Depends
 
 from app.schemas.action_callback import Action
 from app.schemas.action_callback import ActionCallback
-from app.schemas.message import TextMessage
+from app.schemas.message import TextMessage, MediaMessage, MarkupMessage
 
 router = Router(name=__name__)
 _bot = Bot(os.getenv('BOT_TOKEN'))
@@ -20,9 +20,12 @@ _bot = Bot(os.getenv('BOT_TOKEN'))
 
 __message_type_to_send_method: dict = {
     TextMessage: SendMessage,
+    MediaMessage: SendPhoto,
 }
 __message_type_to_edit_method: dict = {
     TextMessage: EditMessageText,
+    MediaMessage: EditMessageMedia,
+    MarkupMessage: EditMessageReplyMarkup
 }
 
 

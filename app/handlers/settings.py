@@ -24,6 +24,5 @@ async def settings_callback(
         settings_service: Annotated[
             SettingsService, Depends(SettingsService.init)]
 ):
-    print(query)
     return await settings_service.handle_criteria_callback(query, callback_data)
 

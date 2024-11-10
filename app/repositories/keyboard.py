@@ -6,6 +6,9 @@ from app.schemas.action_callback import Action, CriteriaActionCallback
 
 
 class KeyboardRepository:
+    false_symbol = '❌'
+    true_symbol = '✅'
+
     @classmethod
     def settings_keyboard(
             cls,
@@ -14,7 +17,7 @@ class KeyboardRepository:
         builder = InlineKeyboardBuilder()
         for crit_name, translated in zip(user.criteria.model_dump().keys(), user.criteria.translated_dict().items()):
             builder.button(
-                text=f'{translated[0]}={translated[1]}',
+                text=f'{[cls.false_symbol, cls.true_symbol][int(translated[1])]} {translated[0]}',
                 callback_data=CriteriaActionCallback(
                     action=Action.settings.action_name,
                     criteria_name=crit_name

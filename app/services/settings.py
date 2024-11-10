@@ -6,7 +6,7 @@ from app.repositories.user import UserRepository
 from app.repositories.keyboard import KeyboardRepository
 from app.schemas.user import UserSchema, CheckCriteriaSchema
 from app.schemas.action_callback import CriteriaActionCallback
-from app.schemas.message import TextMessage
+from app.schemas.message import MarkupMessage
 from app.handlers.utils import bot_route, build_aiogram_method
 
 
@@ -36,9 +36,8 @@ class SettingsService:
     async def handle_criteria_callback(self, query, callback_data: CriteriaActionCallback):
         user_model = self.user_repository.get(query.from_user.id)
         if user_model is None:
-            return query.answer("Пользователь не найден")
-        print(callback_data)
+            return await query.answer("Пользователь не найден")
         user_model = self.user_repository.toggle_criteria(query.from_user.id, callback_data.criteria_name)
         markup = self.keyboard_repository.settings_keyboard(user_model)
-        response = TextMessage(text="Настройки", reply_markup=markup, message_id=query.message.message_id)
+        response = MarkupMessage(reply_markup=markup, message_id=query.message.message_id)
         return build_aiogram_method(query.from_user.id, response, use_edit=True)

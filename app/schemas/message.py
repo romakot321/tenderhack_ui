@@ -11,3 +11,14 @@ class TextMessage(Message):
     text: str
     reply_markup: types.InlineKeyboardMarkup | None = None
     parse_mode: str | None = None
+
+
+class MediaMessage(Message):
+    caption: str | None = None
+    photo: types.BufferedInputFile
+    reply_markup: types.InlineKeyboardMarkup | None = None
+    parse_mode: str | None = None
+
+
+class MarkupMessage(Message):
+    reply_markup: types.InlineKeyboardMarkup | None = None

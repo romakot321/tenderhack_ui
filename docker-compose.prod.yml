@@ -1,0 +1,29 @@
+version: '3'
+services:
+  api:
+    build: ./
+    restart: always
+    container_name: ${CONTAINER_NAME}
+    env_file:
+      - .env
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+    networks:
+      diana-backend_network: { }
+
+  restarter:
+    image: docker:cli
+    depends_on:
+      - "api"
+    env_file:
+      - .env
+    container_name: "${CONTAINER_NAME}-restarter"
+    volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
+    command: [ "/bin/sh", "-c", "while true; do sleep $${CONTAINER_RESTART_WAIT}; docker restart $${CONTAINER_NAME}; done" ]
+    restart: unless-stopped
+
+networks:
+  diana-backend_network:
+    external: true
+    name: $backend_network
